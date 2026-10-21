@@ -76,7 +76,27 @@ make fmt
 
 ---
 
-## 5. Testnet Deployment Guide
+## 5. Active Testnet Deployment
+
+The `invoice_registry` smart contract is actively deployed, initialized, and verified on the official **Stellar Testnet** (Protocol 22).
+
+| Parameter | Value |
+| :--- | :--- |
+| **Contract Name** | `InvoiceRegistry` |
+| **Network** | Stellar Testnet |
+| **Network Passphrase** | `Test SDF Network ; September 2015` |
+| **Contract ID** | `CCG6V5QEJZ2QI7EXIRVQXCHUIFUROXUBMZPTSCRJHOO35CAQ2HZ6IJGC` |
+| **Contract Explorer** | [View on Stellar Expert](https://stellar.expert/explorer/testnet/contract/CCG6V5QEJZ2QI7EXIRVQXCHUIFUROXUBMZPTSCRJHOO35CAQ2HZ6IJGC) |
+| **WASM SHA-256 Hash** | `258688c77041da6696b4dab6a3328fb00871659d54df09cc235282b260cdf2a8` |
+| **Deployer & Admin Address** | `GCF7FGZJ6LVPAWFNANXZH7ANA42G5JII5F2UXXAL3WHQ26ZFXYTE73JM` |
+| **WASM Upload Tx** | [`b0e2c3dd8a39...`](https://stellar.expert/explorer/testnet/tx/b0e2c3dd8a392dab5d50f1fef980a0506f91f67b63c429810d4008b01f7d5897) (Ledger `5315606`) |
+| **Contract Creation Tx** | [`c0ddc3dc0086...`](https://stellar.expert/explorer/testnet/tx/c0ddc3dc00868055e7765af4c40ccbaa4f951447e8015e246337a3870d269d86) (Ledger `5315630`) |
+| **Initialization Tx (`initialize`)** | [`e1e0b095ec64...`](https://stellar.expert/explorer/testnet/tx/e1e0b095ec6471f0f91a1c20a2f7851e6396e389018238d3a0ace977300ec62d) (Ledger `5315634`) |
+| **On-Chain Admin Verification** | Verified via `get_admin` simulation against Soroban RPC |
+
+---
+
+## 6. Testnet Deployment Guide
 
 ```bash
 # 1. Configure Stellar Testnet
