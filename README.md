@@ -1,141 +1,154 @@
-# bill-generator-contracts
+<p align="center">
+  <img src="https://raw.githubusercontent.com/techAlhaji/bill-generator-frontend/main/public/images/banner.png" alt="StellarBills Logo" width="640" onerror="this.style.display='none'" />
+</p>
 
-Soroban smart contracts for the Stellar Bill Generator platform.
+<h1 align="center">StellarBills — Soroban Smart Contracts</h1>
 
-This repository contains the `invoice_registry` smart contract built with Rust using official Soroban SDK `v22.0.0` (Protocol 22). It serves as the on-chain proof-of-issuance anchor, privacy-preserving commitment registry, and atomic settlement coordinator.
+<p align="center">
+  <strong>On-chain proof-of-issuance anchor, privacy-preserving commitment registry, and atomic settlement coordinator on Stellar.</strong>
+</p>
 
----
-
-## 1. Specifications & Architecture
-
-- **Detailed Specification:** [`docs/CONTRACT_SPEC.md`](./docs/CONTRACT_SPEC.md)
-- **Root Architecture Plan:** [`../PROJECT_PLAN.md`](../PROJECT_PLAN.md)
-- **Backend API Contract:** [`../bill-generator-backend/openapi.yaml`](../bill-generator-backend/openapi.yaml)
-- **Frontend Integration Guide:** [`../bill-generator-frontend/docs/INTEGRATION_SPEC.md`](../bill-generator-frontend/docs/INTEGRATION_SPEC.md)
-
----
-
-## 2. Requirements & Installation
-
-### Toolchain Prerequisites
-- **Rust:** `1.84+` (managed via `rustup`)
-- **Compilation Target:** `wasm32-unknown-unknown`
-- **Stellar CLI:** `stellar-cli` `v22+` (optional, for testnet deployment and client binding generation)
-
-### Installation (WSL Ubuntu / Linux)
-```bash
-# 1. Install Rust
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
-
-# 2. Add Wasm target
-rustup target add wasm32-unknown-unknown
-
-# 3. Add components
-rustup component add clippy rustfmt
-```
+<p align="center">
+  <a href="https://github.com/techAlhaji/bill-generator-contracts/actions/workflows/ci.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/techAlhaji/bill-generator-contracts/ci.yml?branch=main&label=CI%20Build" alt="CI Build" />
+  </a>
+  <img src="https://img.shields.io/badge/Rust-1.84%2B-orange.svg" alt="Rust 1.84+" />
+  <img src="https://img.shields.io/badge/Soroban%20SDK-v22.0.0-blueviolet.svg" alt="Soroban SDK v22.0.0" />
+  <img src="https://img.shields.io/badge/Protocol-22-blue.svg" alt="Protocol 22" />
+  <a href="https://stellar.expert/explorer/testnet/contract/CCG6V5QEJZ2QI7EXIRVQXCHUIFUROXUBMZPTSCRJHOO35CAQ2HZ6IJGC">
+    <img src="https://img.shields.io/badge/Stellar%20Testnet-Deployed-success.svg" alt="Stellar Testnet Deployed" />
+  </a>
+  <a href="./LICENSE">
+    <img src="https://img.shields.io/badge/License-Apache%202.0-green.svg" alt="License" />
+  </a>
+</p>
 
 ---
 
-## 3. Build & Test Commands
+## 1. What is StellarBills Contracts?
 
-```bash
-# Run unit tests
-cargo test
+**StellarBills** is a commercial invoicing and billing infrastructure designed for the Stellar blockchain ecosystem. This repository contains the core `invoice_registry` Soroban smart contract. 
 
-# Build release WebAssembly binary
-cargo build --target wasm32-unknown-unknown --release
+Rather than polluting public ledger state with private customer details, item descriptions, and tax numbers, the contract implements a privacy-preserving commitment architecture:
+- **Proof of Issuance:** Merchants anchor an immutable 32-byte SHA-256 digest of the canonical RFC 8785 invoice payload on-chain.
+- **Atomic On-Chain Settlement:** Payers settle invoices directly with SEP-41 tokens via `pay_invoice`, atomically transferring payment and marking the invoice paid in one transaction.
+- **L1 Reconciled Settlements:** Merchants verify direct Stellar Classic payments via Horizon and record settlement commitments on-chain via `record_direct_settlement` without double-charging tokens.
+- **Lifecycle Guarantees:** Strict state transitions prevent duplicate registration, replay attacks, or modifying settled invoices.
 
-# Format check
-cargo fmt --all -- --check
+---
 
-# Linter check
-cargo clippy --all-targets -- -D warnings
-```
+## 2. Maintainers
 
-Or using the included `Makefile`:
-```bash
-make test
-make build
-make clippy
-make fmt
-```
+| Avatar | Maintainer | Role | Contact |
+| :---: | :--- | :--- | :--- |
+| <img src="https://github.com/techAlhaji.png" width="48" height="48" style="border-radius:50%;" /> | **Ademola (@techAlhaji)** | Lead Protocol Engineer | [`ademolabuild@gmail.com`](mailto:ademolabuild@gmail.com) / GitHub: [@techAlhaji](https://github.com/techAlhaji) |
+
+---
+
+## 3. Active Testnet Deployment
+
+The `invoice_registry` smart contract is actively deployed and initialized on the official **Stellar Testnet** (Protocol 22):
+
+| Parameter | Value |
+| :--- | :--- |
+| **Contract Name** | `InvoiceRegistry` |
+| **Network** | Stellar Testnet (`Test SDF Network ; September 2015`) |
+| **Contract Address** | [`CCG6V5QEJZ2QI7EXIRVQXCHUIFUROXUBMZPTSCRJHOO35CAQ2HZ6IJGC`](https://stellar.expert/explorer/testnet/contract/CCG6V5QEJZ2QI7EXIRVQXCHUIFUROXUBMZPTSCRJHOO35CAQ2HZ6IJGC) |
+| **WASM SHA-256 Digest** | `258688c77041da6696b4dab6a3328fb00871659d54df09cc235282b260cdf2a8` |
+| **Deployer & Admin** | [`GCF7FGZJ6LVPAWFNANXZH7ANA42G5JII5F2UXXAL3WHQ26ZFXYTE73JM`](https://stellar.expert/explorer/testnet/account/GCF7FGZJ6LVPAWFNANXZH7ANA42G5JII5F2UXXAL3WHQ26ZFXYTE73JM) |
+| **Contract Creation Tx** | [`c0ddc3dc...`](https://stellar.expert/explorer/testnet/tx/c0ddc3dc00868055e7765af4c40ccbaa4f951447e8015e246337a3870d269d86) |
+| **Initialization Tx** | [`e1e0b095...`](https://stellar.expert/explorer/testnet/tx/e1e0b095ec6471f0f91a1c20a2f7851e6396e389018238d3a0ace977300ec62d) |
 
 ---
 
 ## 4. Contract Methods & Interface
 
-| Method | Parameters | Authorization | Description |
+| Method | Parameters | Auth Required | Description |
 | :--- | :--- | :--- | :--- |
-| `initialize` | `admin: Address` | None (Callable once) | Sets contract admin and emits `init` event. |
-| `register_invoice` | `issuer: Address`, `invoice_id: BytesN<32>`, `amount: i128`, `token: Address`, `content_hash: BytesN<32>` | `issuer.require_auth()` | Commits invoice on-chain with `Unpaid` status. Prevents duplicates. |
-| `pay_invoice` | `payer: Address`, `invoice_id: BytesN<32>` | `payer.require_auth()` | Transfers tokens from payer to issuer via SEP-41 token client, marks status `Paid`. |
-| `record_direct_settlement` | `issuer: Address`, `invoice_id: BytesN<32>`, `payment_ref: BytesN<32>` | `issuer.require_auth()` | Reconciles verified direct L1 Stellar Classic payment on-chain without double-charging tokens. |
-| `cancel_invoice` | `issuer: Address`, `invoice_id: BytesN<32>` | `issuer.require_auth()` | Transitions unpaid invoice to `Cancelled`. Prohibited if already paid. |
-| `get_invoice` | `invoice_id: BytesN<32>` | Read-only | Returns `Option<InvoiceRecord>` and extends persistent storage TTL. |
-| `get_admin` | None | Read-only | Returns `Option<Address>` of the contract admin. |
+| `initialize` | `admin: Address` | None (One-time) | Initializes admin address and emits contract `init` event. |
+| `register_invoice` | `issuer: Address`, `invoice_id: BytesN<32>`, `amount: i128`, `token: Address`, `content_hash: BytesN<32>` | `issuer.require_auth()` | Records on-chain invoice commitment in `Unpaid` status. Prevents duplicates. |
+| `pay_invoice` | `payer: Address`, `invoice_id: BytesN<32>` | `payer.require_auth()` | Atomically transfers tokens from payer to issuer via SEP-41 token client, marks status `Paid`. |
+| `record_direct_settlement` | `issuer: Address`, `invoice_id: BytesN<32>`, `payment_ref: BytesN<32>` | `issuer.require_auth()` | Reconciles verified direct L1 Stellar Classic payment on-chain with payment reference. |
+| `cancel_invoice` | `issuer: Address`, `invoice_id: BytesN<32>` | `issuer.require_auth()` | Cancels an unpaid invoice. Prohibited if already settled. |
+| `get_invoice` | `invoice_id: BytesN<32>` | Read-only | Returns `Option<InvoiceRecord>` and auto-extends persistent storage TTL. |
+| `get_admin` | None | Read-only | Returns `Option<Address>` of the contract administrator. |
 
 ---
 
-## 5. Active Testnet Deployment
+## 5. Quick-Start & Local Build
 
-The `invoice_registry` smart contract is actively deployed, initialized, and verified on the official **Stellar Testnet** (Protocol 22).
-
-| Parameter | Value |
-| :--- | :--- |
-| **Contract Name** | `InvoiceRegistry` |
-| **Network** | Stellar Testnet |
-| **Network Passphrase** | `Test SDF Network ; September 2015` |
-| **Contract ID** | `CCG6V5QEJZ2QI7EXIRVQXCHUIFUROXUBMZPTSCRJHOO35CAQ2HZ6IJGC` |
-| **Contract Explorer** | [View on Stellar Expert](https://stellar.expert/explorer/testnet/contract/CCG6V5QEJZ2QI7EXIRVQXCHUIFUROXUBMZPTSCRJHOO35CAQ2HZ6IJGC) |
-| **WASM SHA-256 Hash** | `258688c77041da6696b4dab6a3328fb00871659d54df09cc235282b260cdf2a8` |
-| **Deployer & Admin Address** | `GCF7FGZJ6LVPAWFNANXZH7ANA42G5JII5F2UXXAL3WHQ26ZFXYTE73JM` |
-| **WASM Upload Tx** | [`b0e2c3dd8a39...`](https://stellar.expert/explorer/testnet/tx/b0e2c3dd8a392dab5d50f1fef980a0506f91f67b63c429810d4008b01f7d5897) (Ledger `5315606`) |
-| **Contract Creation Tx** | [`c0ddc3dc0086...`](https://stellar.expert/explorer/testnet/tx/c0ddc3dc00868055e7765af4c40ccbaa4f951447e8015e246337a3870d269d86) (Ledger `5315630`) |
-| **Initialization Tx (`initialize`)** | [`e1e0b095ec64...`](https://stellar.expert/explorer/testnet/tx/e1e0b095ec6471f0f91a1c20a2f7851e6396e389018238d3a0ace977300ec62d) (Ledger `5315634`) |
-| **On-Chain Admin Verification** | Verified via `get_admin` simulation against Soroban RPC |
-
----
-
-## 6. Testnet Deployment Guide
+### Prerequisites
+- [Rust 1.84+](https://rustup.rs/)
+- Target: `wasm32-unknown-unknown`
+- Optional: `stellar-cli` v22+
 
 ```bash
-# 1. Configure Stellar Testnet
-stellar network add \
-  --global testnet \
-  --rpc-url https://soroban-testnet.stellar.org:443 \
-  --network-passphrase "Test SDF Network ; September 2015"
+# 1. Clone repository
+git clone https://github.com/techAlhaji/bill-generator-contracts.git
+cd bill-generator-contracts
 
-# 2. Generate and fund deployer identity
-stellar keys generate --global deployer --network testnet
-stellar keys fund deployer --network testnet
+# 2. Add Wasm target & linters
+rustup target add wasm32-unknown-unknown
+rustup component add clippy rustfmt
 
-# 3. Deploy contract Wasm
-stellar contract deploy \
-  --wasm target/wasm32-unknown-unknown/release/invoice_registry.wasm \
-  --source deployer \
-  --network testnet
-# Outputs deployed CONTRACT_ID (e.g. CA...)
+# 3. Run unit tests
+cargo test --all
 
-# 4. Initialize contract
-stellar contract invoke \
-  --id <CONTRACT_ID> \
-  --source deployer \
-  --network testnet \
-  -- \
-  initialize \
-  --admin $(stellar keys address deployer)
+# 4. Check formatting & Clippy lints
+cargo fmt --all -- --check
+cargo clippy --all-targets -- -D warnings
 
-# 5. Generate TypeScript Client Bindings
-stellar contract bindings typescript \
-  --wasm target/wasm32-unknown-unknown/release/invoice_registry.wasm \
-  --id <CONTRACT_ID> \
-  --output-dir ../packages/invoice-registry-client
+# 5. Build optimized release WebAssembly binary
+cargo build --target wasm32-unknown-unknown --release
 ```
 
 ---
 
-## 6. Limitations of the MVP Payment Model
+## 6. Repository Architecture
 
-1. **Direct L1 Payment Reconciliation:** Direct payments made via Stellar Classic operations (e.g. XLM or USDC transfers with invoice memo) execute on the Stellar Core L1 ledger. Because Soroban contracts cannot autonomously listen to L1 transactions without an oracle or off-chain relayer, the merchant/issuer (or an authorized relayer) must invoke `record_direct_settlement` with the verified transaction hash to update the on-chain status.
-2. **Strict Single-Transaction Settlement:** To prevent undercollateralized releases, the contract requires full payment in a single token transfer. Partial payments are rejected at the contract level.
-3. **Storage TTL Expiration:** Persistent invoice entries have a 30-day TTL extension window (`LEDGER_EXTEND_TO = 518400`). To retain data indefinitely on testnet/mainnet, entries must be read or refreshed before the expiration threshold (`LEDGER_THRESHOLD = 17280`).
+```
+bill-generator-contracts/
+├── .github/
+│   └── workflows/
+│       └── ci.yml               # Automated formatting, linting, tests & WASM build
+├── contracts/
+│   └── invoice_registry/
+│       ├── src/
+│       │   ├── lib.rs           # Core contract implementation & entrypoints
+│       │   ├── types.rs         # Storage types, enums (Status, DataKey), structs
+│       │   ├── errors.rs        # ContractError enum with typed error codes
+│       │   ├── events.rs        # Typed Soroban event topics and payloads
+│       │   └── test.rs          # Unit & integration test suite
+│       └── Cargo.toml
+├── docs/
+│   └── CONTRACT_SPEC.md         # Formal technical specification & state machine
+├── scripts/
+│   └── create_issues.sh         # gh script for automated community issue creation
+├── Cargo.toml                   # Cargo workspace definition
+├── CONTRIBUTING.md              # Issue claiming workflow (.take) and guidelines
+├── SECURITY.md                  # Responsible disclosure policy and disclaimer
+└── README.md
+```
+
+---
+
+## 7. Contributing & Security
+
+- **Contributing:** Please review [CONTRIBUTING.md](./CONTRIBUTING.md) before submitting code. We use an issue-first workflow with `.take` comments and conventional commits.
+- **Security:** Review [SECURITY.md](./SECURITY.md) for vulnerability disclosure guidelines and testnet disclaimer.
+
+---
+
+## 8. Contributors
+
+Thanks to everyone contributing to StellarBills!
+
+<a href="https://github.com/techAlhaji/bill-generator-contracts/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=techAlhaji/bill-generator-contracts" alt="Contributors" />
+</a>
+
+---
+
+## 9. License
+
+This repository is licensed under the [Apache License 2.0](./LICENSE).
