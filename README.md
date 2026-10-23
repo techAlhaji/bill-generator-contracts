@@ -18,10 +18,15 @@
   <a href="https://stellar.expert/explorer/testnet/contract/CCG6V5QEJZ2QI7EXIRVQXCHUIFUROXUBMZPTSCRJHOO35CAQ2HZ6IJGC">
     <img src="https://img.shields.io/badge/Stellar%20Testnet-Deployed-success.svg" alt="Stellar Testnet Deployed" />
   </a>
+  <a href="https://techalhaji.github.io/bill-generator-frontend/">
+    <img src="https://img.shields.io/badge/Docs-StellarBills%20Portal-00E5FF?style=flat&logo=gitbook&logoColor=white" alt="Unified Documentation Portal" />
+  </a>
   <a href="./LICENSE">
     <img src="https://img.shields.io/badge/License-Apache%202.0-green.svg" alt="License" />
   </a>
 </p>
+
+> 📖 **Live Documentation Portal:** Full Protocol 22 smart contract specifications, method signatures, testnet explorer links, and error code references are hosted at **[https://techalhaji.github.io/bill-generator-frontend/](https://techalhaji.github.io/bill-generator-frontend/)**.
 
 ---
 
